@@ -1,8 +1,8 @@
 schema_version: 1
 
 context:
-  version: "0.15.3"
-  build_number: 2
+  version: "0.16.0"
+  build_number: 0
 
 package:
   name: "openmc"
@@ -10,18 +10,10 @@ package:
 
 source:
   - url: https://github.com/openmc-dev/openmc/archive/v${{ version }}.tar.gz
-    sha256: 7019d3325cf59b1d1d3176ac85a247e75a1b9efa6ed40bdf0e7178ed4d03b83a
-    patches:
-      - remove-setuptools-from-run-dependencies.patch
+    sha256: cfdf10f8dc66e652668dbc94501d5ed99b3dfecabc11cf91989a29ba7984654f
   - url: https://github.com/zeux/pugixml/archive/v1.15.tar.gz
     sha256: b39647064d9e28297a34278bfb897092bf33b7c487906ddfc094c9e8868bddcb
     target_directory: vendor/pugixml
-  - url: https://github.com/xtensor-stack/xtensor/archive/0.25.0.tar.gz
-    sha256: 32d5d9fd23998c57e746c375a544edf544b74f0a18ad6bc3c38cbba968d5e6c7
-    target_directory: vendor/xtensor
-  - url: https://github.com/xtensor-stack/xtl/archive/0.7.7.tar.gz
-    sha256: 44fb99fbf5e56af5c43619fc8c29aa58e5fad18f3ba6e7d9c55c111b62df1fbb
-    target_directory: vendor/xtl
   - url: https://github.com/fmtlib/fmt/archive/11.0.2.tar.gz
     sha256: 6cb1e6d37bdcb756dbbe59be438790db409cdb4868c66e888d5df9f13f7c027f
     target_directory: vendor/fmt
@@ -47,7 +39,7 @@ build:
     down_prioritize_variant: ${{ 0 if dagmc == "dagmc" else 1 }}
   skip:
     - win
-    - match(python, "<3.11")
+    - match(python, "<3.12")
   prefix_detection:
     ignore_binary_files: true
 
@@ -69,6 +61,8 @@ requirements:
   host:
     - if: dagmc == "dagmc"
       then: dagmc >=3.2.3 [build=${{ mpi_prefix }}_*]
+    - if: dagmc == "dagmc"
+      then: eigen <5       
     # Repeat of requirements with no constraint and with build variant are to
     # pick up global pinning (from no constraint)
     - hdf5
@@ -106,6 +100,7 @@ requirements:
     - njoy2016
     - ncrystal
     - mcpl
+
 
 tests:
   - package_contents:
