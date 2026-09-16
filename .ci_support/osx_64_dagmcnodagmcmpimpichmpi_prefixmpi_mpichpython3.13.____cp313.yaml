@@ -20,6 +20,8 @@ cxx_compiler_version:
 - '21'
 dagmc:
 - nodagmc
+eigen_abi_devel:
+- 3.*
 hdf5:
 - 1.14.6
 libpng:
